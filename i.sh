@@ -12,7 +12,10 @@ ldconfig
 
 cd /root
 yum -y install python-setuptools python-pip python-devel -y
-easy_install pipgit clone -b manyuser https://github.com/lizhongnian/shadowsocks.gitcd shadowsocks
+easy_install pip
+git clone -b manyuser https://github.com/lizhongnian/shadowsocks.git
+cd shadowsocks
+pip install --upgrade pip
 pip install -r requirements.txt
 cp apiconfig.py userapiconfig.py
 cp config.json user-config.json
