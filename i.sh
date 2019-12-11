@@ -1,21 +1,20 @@
 
 #!/bin/bash
+server=$1;
 curl -O https://raw.githubusercontent.com/wartw98/sshkey/master/install.sh
 sh install.sh
-yum install vim wget nload iftop -y
-yum -y groupinstall "Development Tools"
-wget https://download.libsodium.org/libsodium/releases/libsodium-1.0.16.tar.gz 
-tar xf libsodium-1.0.16.tar.gz && cd libsodium-1.0.16
-./configure && make -j2 && make install
-echo /usr/local/lib > /etc/ld.so.conf.d/usr_local_lib.conf
-ldconfig
+yum install wget -y && wget https://raw.githubusercontent.com/SuicidalCat/Airport-toolkit/master/ssr_node_c7.sh && chmod +x ssr_node_c7.sh && ./ssr_node_c7.sh<<EOF
+Y
+1
+Y
+https://srb.jxspay.top/
+8n1454bj8418514te8y145e81t443y5h4451h48u4h1y854j68ys14y16se4y346hs
+$server
+jxspayuser
+%5m%id.%suffix
+Y
+Y
+Y
+Y
 
-cd /root
-yum -y install python-setuptools python-pip python-devel -y
-easy_install pip
-git clone -b manyuser https://github.com/lizhongnian/shadowsocks.git
-cd shadowsocks
-pip install --upgrade pip
-pip install -r requirements.txt
-cp apiconfig.py userapiconfig.py
-cp config.json user-config.json
+EOF
