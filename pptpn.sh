@@ -34,4 +34,4 @@ iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 sudo iptables-save
 echo "vpn * vpn *" >> /etc/ppp/chap-secrets
 service pptpd restart
-service pptpd enable 
+systemctl enable pptpd
