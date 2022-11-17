@@ -29,8 +29,18 @@ service iptables stop
 chkconfig iptables off
 iptables -F
 chmod +x /etc/rc.d/rc.local
-echo "iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE" >> /etc/rc.d/rc.local
-iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+echo "iptables -I INPUT -p tcp --dport 1723 -j ACCEPT
+iptables -I INPUT -p gre -j ACCEPT
+iptables -t nat -I POSTROUTING -s 10.0.10.0/24 -o eth0 -j MASQUERADE
+iptables -I FORWARD -i ppp+ -m state --state NEW,RELATED,ESTABLISHED -j ACCEPT
+iptables -I FORWARD -p tcp --syn -i ppp+ -j TCPMSS --set-mss 1356" >> /etc/rc.d/rc.local
+systemctl enable iptables
+systemctl start iptables
+iptables -I INPUT -p tcp --dport 1723 -j ACCEPT
+iptables -I INPUT -p gre -j ACCEPT
+iptables -t nat -I POSTROUTING -s 10.0.10.0/24 -o eth0 -j MASQUERADE
+iptables -I FORWARD -i ppp+ -m state --state NEW,RELATED,ESTABLISHED -j ACCEPT
+iptables -I FORWARD -p tcp --syn -i ppp+ -j TCPMSS --set-mss 1356
 sudo iptables-save
 echo "vpn * vpn *" >> /etc/ppp/chap-secrets
 service pptpd restart
