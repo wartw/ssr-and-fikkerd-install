@@ -693,7 +693,7 @@ xmr.bohemianpool.com
 xmr.coinmine.pl
 xmr.crypto-pool.fr
 xmr.crypto-pools.org
-xmr.-eu1.nanopool.org
+xmr-eu1.nanopool.org
 xmr.hashinvest.ws
 xmr.lindon-pool.win
 xmr.minecraftpool.com
