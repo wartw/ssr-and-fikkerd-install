@@ -308,7 +308,6 @@ mail.miningpoolhub.com
 mail.multipool.us
 mail.nanopool.org
 mail.ypool.net
-mailzimbra.nanopool.org
 main.xmrpool.net
 manila-1.xmrpool.net
 maxcoin.miningpoolhub.com
