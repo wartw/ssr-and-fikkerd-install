@@ -271,7 +271,6 @@ granite.miningpoolhub.com
 groestlcoin.biz
 groestlcoin.miningpoolhub.com
 grs.cpu-pool.net
-h.nanopool.org
 halibut.multipool.us
 hash.rigpool.com
 hashinvest.net
