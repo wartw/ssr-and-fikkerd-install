@@ -204,12 +204,10 @@ ethweb.antpool.com
 etn.cryptoxpool.com
 etn.lindon-pool.win
 etn.minecraftpool.com
-
 etn.spacepools.org
 etn.xzpool.com
 etnhashpool.tk
 etnpool.minekitten.io
-
 eu.bohemianpool.com
 eu.btgpool.pro
 eu.hushpool.cloud
