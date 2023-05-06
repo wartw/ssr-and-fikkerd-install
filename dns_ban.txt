@@ -204,12 +204,12 @@ ethweb.antpool.com
 etn.cryptoxpool.com
 etn.lindon-pool.win
 etn.minecraftpool.com
-etn.nanopool.org
+
 etn.spacepools.org
 etn.xzpool.com
 etnhashpool.tk
 etnpool.minekitten.io
-etn-us-west1.nanopool.org
+
 eu.bohemianpool.com
 eu.btgpool.pro
 eu.hushpool.cloud
@@ -790,7 +790,6 @@ backu-ool.commonero
 167bt.com
 bitquery.io
 3336637.com
-cloudflare-dns.com
 lanspirit.net
 huobiasia.vip
 gg94in.com
