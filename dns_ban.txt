@@ -230,7 +230,6 @@ europe1.darkcoin.miningpoolhub.com
 execoin.miningpoolhub.com
 exp.mypool.online
 exp.poolto.be
-exp1.nanopool.org
 expanse.miningpoolhub.com
 exp-eu.dwarfpool.com
 explorer.nnc.mypool.online
