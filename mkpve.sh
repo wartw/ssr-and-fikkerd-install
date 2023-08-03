@@ -25,7 +25,8 @@ else
     echo "-- Downloading CHR $version image file."
     cd  /root/temp
     echo "---------------------------------------------------------------------------"
-    wget https://download.mikrotik.com/routeros/$version/chr-$version.img.zip
+    wget -4 https://download.mikrotik.com/routeros/$version/chr-$version.img.zip
+    apt install unzip -y
     unzip chr-$version.img.zip
     echo "---------------------------------------------------------------------------"
 fi
