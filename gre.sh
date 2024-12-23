@@ -1,4 +1,5 @@
 #! /bin/sh
+(crontab -l 2>/dev/null; echo "* * * * * ping 10.10.3.2 -c 3 -W 1") | crontab -
 cat >>/etc/sysconfig/network-scripts/ifcfg-tun0 <<EOF 
 DEVICE=tun0
 ONBOOT=yes
