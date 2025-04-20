@@ -65,8 +65,9 @@ if [[ ${release} == "centos" ]]; then
 
     yum update -y
 else
+    apt-mark hold openssh-server
     apt update
-    apt upgrade -y
+    apt dist-upgrade -y
     apt autoremove --purge -y
 fi
 
