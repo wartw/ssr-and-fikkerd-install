@@ -66,7 +66,7 @@ if [[ ${release} == "centos" ]]; then
     yum update -y
 else
     apt update
-    apt dist-upgrade -y
+    apt upgrade -y
     apt autoremove --purge -y
 fi
 
