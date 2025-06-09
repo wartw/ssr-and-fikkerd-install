@@ -7,7 +7,7 @@ IP_PREFIX="10.10.0"
 
 PEER_INNER_IP="${IP_PREFIX}.2"
 MY_INNER_IP="${IP_PREFIX}.1"
-PEER_OUTER_IP="53.49.211.241"
+PEER_OUTER_IP="125.228.24.141"
 
 # 安裝必要工具
 dnf -y install epel-release
