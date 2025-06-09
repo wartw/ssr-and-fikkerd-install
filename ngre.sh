@@ -1,16 +1,43 @@
 #!/bin/bash
 
-# 每分鐘 ping 一次
-(crontab -l 2>/dev/null; echo "* * * * * ping 10.10.8.2 -c 3 -W 1") | crontab -
+# =========================
+# 自訂 GRE 內部 IP 前綴
+IP_PREFIX="10.10.0"
+# =========================
 
-# 安裝常用工具
+PEER_INNER_IP="${IP_PREFIX}.2"
+MY_INNER_IP="${IP_PREFIX}.1"
+PEER_OUTER_IP="53.49.211.241"
+
+# 安裝必要工具
 dnf -y install epel-release
-dnf -y install htop tcpdump net-tools bind-utils wget nano iproute iptables iptables-services \
-               unzip zip vim nload iftop sudo git curl mtr ca-certificates NetworkManager
+dnf -y install htop tcpdump net-tools bind-utils wget nano \
+               unzip zip vim nload iftop sudo git curl mtr ca-certificates
+dnf -y install iptables iptables-services network-scripts
 
-# 載入 GRE 模組並設定開機自動載入
+# 停用 NetworkManager，改用傳統 network
+systemctl stop NetworkManager
+systemctl disable NetworkManager
+systemctl enable network
+systemctl start network
+
+# 設定 crontab 每分鐘 ping 對方內部 IP
+(crontab -l 2>/dev/null; echo "* * * * * ping ${PEER_INNER_IP} -c 3 -W 1") | crontab -
+
+# 建立 GRE interface 設定
+cat >/etc/sysconfig/network-scripts/ifcfg-tun0 <<EOF
+DEVICE=tun0
+ONBOOT=yes
+TYPE=GRE
+PEER_OUTER_IPADDR=${PEER_OUTER_IP}
+PEER_INNER_IPADDR=${PEER_INNER_IP}
+MY_INNER_IPADDR=${MY_INNER_IP}
+BOOTPROTO=static
+MTU=1402
+EOF
+
+# 載入 GRE 模組
 modprobe ip_gre
-lsmod | grep gre
 cat >/etc/sysconfig/modules/ip_gre.modules <<EOF
 #!/bin/sh
 /sbin/modinfo -F filename ip_gre > /dev/null 2>&1
@@ -18,22 +45,10 @@ cat >/etc/sysconfig/modules/ip_gre.modules <<EOF
 EOF
 chmod +x /etc/sysconfig/modules/ip_gre.modules
 
-# 建立 GRE tunnel（使用 NetworkManager）
-nmcli connection add type gre \
-  con-name tun0 ifname tun0 \
-  remote 53.49.211.241 \
-  ip4 10.10.8.1/30 \
-  gre-local-auto no
+# 重啟 network 載入 GRE 設定
+systemctl restart network
 
-nmcli connection modify tun0 ipv4.addresses 10.10.8.1/30
-nmcli connection modify tun0 ipv4.method manual
-nmcli connection modify tun0 mtu 1402
-nmcli connection modify tun0 connection.autoconnect yes
-
-# 啟動 GRE tunnel
-nmcli connection up tun0
-
-# 系統參數調整
+# 調整核心參數
 cat >>/etc/sysctl.conf <<EOF
 net.ipv4.conf.all.forwarding = 1
 net.ipv4.conf.default.forwarding = 1
@@ -41,9 +56,17 @@ net.ipv4.ip_forward = 1
 net.ipv4.conf.all.accept_redirects = 0
 net.ipv4.conf.all.send_redirects = 0
 net.ipv4.conf.default.send_redirects = 0
+net.ipv4.conf.eth0.send_redirects = 0
 net.ipv4.conf.default.accept_redirects = 0
+net.ipv4.conf.eth0.accept_redirects = 0
 net.ipv4.conf.all.rp_filter=0
 net.ipv4.conf.default.rp_filter=0
+net.ipv4.conf.eth0.rp_filter=0
+net.ipv4.conf.gre0.rp_filter=0
+net.ipv4.conf.gretap0.rp_filter=0
+net.ipv4.conf.ip_vti0.rp_filter=0
+net.ipv4.conf.tunl0.rp_filter=0
+net.ipv4.conf.erspan0.rp_filter=0
 vm.overcommit_memory = 1
 fs.file-max = 1000000
 fs.inotify.max_user_instances = 8192
@@ -70,19 +93,18 @@ EOF
 
 sysctl -p
 
-# 停用 firewalld，改用 iptables
+# 改用 iptables
 systemctl stop firewalld
 systemctl disable firewalld
-
 systemctl enable iptables
 systemctl start iptables
 
-# 基本防火牆規則
+# iptables NAT & GRE 規則
 iptables -t nat -I POSTROUTING -o eth0 -j MASQUERADE
 iptables -A INPUT -p gre -j ACCEPT
 iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 iptables-save > /etc/sysconfig/iptables
 
-# 確保 iptables 恢復於開機時啟用
+# 確保開機載入 iptables
 echo "iptables-restore < /etc/sysconfig/iptables" >> /etc/rc.d/rc.local
 chmod +x /etc/rc.d/rc.local
