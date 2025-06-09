@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 每分鐘 ping 一次
-(crontab -l 2>/dev/null; echo "* * * * * ping 10.10.3.2 -c 3 -W 1") | crontab -
+(crontab -l 2>/dev/null; echo "* * * * * ping 10.10.8.2 -c 3 -W 1") | crontab -
 
 # 安裝常用工具
 dnf -y install epel-release
@@ -22,10 +22,10 @@ chmod +x /etc/sysconfig/modules/ip_gre.modules
 nmcli connection add type gre \
   con-name tun0 ifname tun0 \
   remote 53.49.211.241 \
-  ip4 10.10.0.1/30 \
+  ip4 10.10.8.1/30 \
   gre-local-auto no
 
-nmcli connection modify tun0 ipv4.addresses 10.10.0.1/30
+nmcli connection modify tun0 ipv4.addresses 10.10.8.1/30
 nmcli connection modify tun0 ipv4.method manual
 nmcli connection modify tun0 mtu 1402
 nmcli connection modify tun0 connection.autoconnect yes
